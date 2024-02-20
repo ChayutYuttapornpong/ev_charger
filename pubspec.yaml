@@ -68,6 +68,12 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   firebase_storage: ^11.6.0
   image_picker: ^1.0.7
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  image_path: "images/IconApp.png"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

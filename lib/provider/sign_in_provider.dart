@@ -70,7 +70,7 @@ class SignInProvide extends ChangeNotifier {
               _uid = snapshot['uid'],
               _name = snapshot['name'],
               _email = snapshot['email'],
-              // _imageUrl = snapshot['image_url'],
+              _imageUrl = snapshot['image_url'],
               _provider = snapshot['provider'],
             });
   }
@@ -83,7 +83,7 @@ class SignInProvide extends ChangeNotifier {
       "name": _name,
       "email": _email,
       "uid": _uid,
-      //"image_url": _imageUrl,
+      "image_url": _imageUrl,
       "provider": _provider,
     });
     notifyListeners();
@@ -94,9 +94,8 @@ class SignInProvide extends ChangeNotifier {
     final SharedPreferences s = await SharedPreferences.getInstance();
     await s.setString('name', _name!);
     await s.setString('email', _email!);
-    //await s.setString('image_url', _imageUrl!);
+    await s.setString('image_url', _imageUrl!);
     await s.setString('uid', _uid!);
-
     await s.setString('provider', _provider!);
     notifyListeners();
   }
@@ -107,7 +106,7 @@ class SignInProvide extends ChangeNotifier {
     _name = s.getString('name');
     _email = s.getString('email');
     _imageUrl = s.getString('image_url');
-    //_uid = s.getString('uid');
+    _uid = s.getString('uid');
     _provider = s.getString('provider');
 
     notifyListeners();
@@ -172,6 +171,7 @@ class SignInProvide extends ChangeNotifier {
         // saving the values
         _name = profile['name'];
         _email = profile['email'];
+        _imageUrl = profile['picture']['data']['url'];
         _uid = profile['id'];
         _hasError = false;
         _provider = "FACEBOOK";
@@ -224,7 +224,7 @@ class SignInProvide extends ChangeNotifier {
         // now save all values
         _name = userDetails.displayName;
         _email = userDetails.email;
-
+        _imageUrl = userDetails.photoURL;
         _provider = "Google";
         _uid = userDetails.uid;
         notifyListeners();
@@ -305,9 +305,13 @@ class SignInProvide extends ChangeNotifier {
 
     try {
       String imageUrl = await uploadImageToStorage("profileImage", file);
-      await _firebaseFirestore
+      User? user = _firebaseAuth.currentUser;
+      /*await _firebaseFirestore
           .collection("usersProfile")
-          .add({'uid': uid, 'ImageUrl': imageUrl});
+          .add({'image': imageUrl, 'uid': user?.uid});*/
+      await _firebaseFirestore.collection('users').doc(user?.uid).update({
+        'photoURL': imageUrl,
+      });
 
       resp = "Profile Image has been uploaded successfully!";
     } catch (err) {
