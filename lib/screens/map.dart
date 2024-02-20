@@ -493,7 +493,7 @@ Widget _buildDetailsTab(DocumentSnapshot evData) {
           ),
           TextField(
             decoration: InputDecoration(
-              labelText: 'Feedback',
+              labelText: 'Review',
               hintText: 'Provide your feedback here...',
             ),
             onChanged: (value) {
